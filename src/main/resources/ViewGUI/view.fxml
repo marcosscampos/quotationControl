@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="460.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.infnet.edu.gui.GUIController.QuotationController">
+    <children>
+        <Accordion layoutX="8.0" layoutY="12.0" prefHeight="437.0" prefWidth="684.0">
+            <panes>
+                <TitledPane animated="false" text="Cotação">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <TableView fx:id="tableCotacao" editable="true" layoutX="7.0" layoutY="14.0" prefHeight="200.0" prefWidth="668.0">
+                                    <columns>
+                                        <TableColumn fx:id="tableCotacaoId" prefWidth="37.0" text="ID" />
+                                        <TableColumn fx:id="tableCotacaoProduto" prefWidth="155.0" text="Produto" />
+                                        <TableColumn fx:id="tableCotacaoPreco" prefWidth="98.0" text="Preço" />
+                                        <TableColumn fx:id="tableCotacaoFornecedor" prefWidth="265.0" text="Fornecedor" />
+                                        <TableColumn fx:id="tableCotacaoData" prefWidth="112.0" text="Data de Cotação" />
+                                    </columns>
+                                </TableView>
+                                <ComboBox fx:id="dropProduto" layoutX="116.0" layoutY="306.0" prefHeight="25.0" prefWidth="175.0" />
+                                <Label layoutX="29.0" layoutY="310.0" text="Produto" />
+                                <Separator layoutY="229.0" prefHeight="3.0" prefWidth="684.0" />
+                                <Label layoutX="35.0" layoutY="277.0" text="Preço" />
+                                <TextField fx:id="txtpreco" layoutX="117.0" layoutY="273.0" prefHeight="25.0" prefWidth="175.0" />
+                                <DatePicker fx:id="dtCotacaoData" layoutX="117.0" layoutY="239.0" prefHeight="25.0" prefWidth="175.0" />
+                                <Label layoutX="16.0" layoutY="242.0" text="Data da Cotação" />
+                                <Button fx:id="btnSalvarCotacao" layoutX="145.0" layoutY="347.0" mnemonicParsing="false" text="Salvar" />
+                                <Button fx:id="btnExcluirCotacao" layoutX="205.0" layoutY="347.0" mnemonicParsing="false" text="Excluir" />
+                                <Button fx:id="btnBuscar" layoutX="398.0" layoutY="273.0" mnemonicParsing="false" text="Buscar por..." />
+                        <TextField fx:id="txtFiltros" layoutX="398.0" layoutY="239.0" prefHeight="25.0" prefWidth="265.0" />
+                        <ComboBox fx:id="dropFiltros" layoutX="513.0" layoutY="273.0" prefWidth="150.0" />
+                        <Button fx:id="btnExportar" layoutX="551.0" layoutY="347.0" mnemonicParsing="false" text="Exportar para CSV" />
+                            </children></AnchorPane>
+                    </content>
+                </TitledPane>
+                <TitledPane animated="false" prefHeight="206.0" prefWidth="0.0" text="Produtos">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <TableView fx:id="tableProduto" editable="true" layoutX="5.0" layoutY="15.0" prefHeight="200.0" prefWidth="668.0">
+                                    <columns>
+                                        <TableColumn fx:id="tableProdutoId" prefWidth="20" text="ID" />
+                                        <TableColumn fx:id="tableProdutoNome" prefWidth="299.0" text="Nome" />
+                                        <TableColumn fx:id="tableProdutoFornecedor" prefWidth="348.0" text="Fornecedor" />
+                                    </columns>
+                                </TableView>
+                                <Label layoutX="42.0" layoutY="297.0" text="Fornecedor" />
+                                <Label layoutX="24.0" layoutY="264.0" text="Nome Produto" />
+                                <TextField fx:id="txtProduto" layoutX="115.0" layoutY="260.0" prefHeight="25.0" prefWidth="200.0" />
+                                <TextField fx:id="txtFornecedor" layoutX="115.0" layoutY="293.0" prefHeight="25.0" prefWidth="200.0" />
+                                <Button fx:id="btnSalvarProduto" layoutX="153.0" layoutY="327.0" mnemonicParsing="false" text="Salvar" />
+                                <Button fx:id="btnExcluirProduto" layoutX="222.0" layoutY="327.0" mnemonicParsing="false" text="Excluir" />
+                                <Separator layoutX="-1.0" layoutY="231.0" prefHeight="0.0" prefWidth="684.0" />
+                        <TextField fx:id="txtFiltros" layoutX="397.0" layoutY="260.0" prefHeight="25.0" prefWidth="250.0" />
+                        <ComboBox fx:id="comboFiltro" layoutX="494.0" layoutY="293.0" prefWidth="150.0" />
+                        <Button fx:id="btnPesquisar" layoutX="397.0" layoutY="293.0" mnemonicParsing="false" text="Buscar por" />
+                            </children></AnchorPane>
+                    </content>
+                </TitledPane>
+            </panes>
+        </Accordion>
+    </children>
+
+
+</AnchorPane>

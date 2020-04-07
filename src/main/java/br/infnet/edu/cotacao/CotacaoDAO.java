@@ -4,17 +4,21 @@ import br.infnet.edu.jdbc.ConnectionFactory;
 import br.infnet.edu.produtos.Produto;
 import javafx.scene.control.Alert;
 
+import javax.xml.transform.Result;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CotacaoDAO {
 
     public Cotacao inserir(Cotacao produto) {
+
         try (Connection con = ConnectionFactory.conectar()) {
-            String sql = "INSERT INTO cotacao(preco, data, id_produto) VALUES(?, DATE_FORMAT(?, '%d/%m/%Y'), ?)";
+            String sql = "INSERT INTO cotacao(preco, data, id_produto) VALUES(?, ?, ?)";
 
             try(PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                System.out.println(produto.getProduto().getId());
                 ps.setDouble(1, produto.getPreco());
                 ps.setDate(2, new Date(produto.getData().getTime()));
                 ps.setInt(3, produto.getProduto().getId());
@@ -30,9 +34,9 @@ public class CotacaoDAO {
             ex.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO!");
+            alert.setHeaderText("");
             alert.setContentText("ERRO: Não foi possível concluir a operação.");
-
-            alert.showAndWait();
+            alert.show();
         }
         return produto;
     }
@@ -56,7 +60,9 @@ public class CotacaoDAO {
             ex.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO!");
+            alert.setHeaderText("");
             alert.setContentText("ERRO: Não foi possível concluir a operação.");
+            alert.show();
         }
         return cotacoes;
     }
@@ -85,7 +91,9 @@ public class CotacaoDAO {
             ex.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO!");
+            alert.setHeaderText("");
             alert.setContentText("ERRO: Não foi possível concluir a operação.");
+            alert.show();
         }
 
         return cotacoes;
@@ -104,7 +112,9 @@ public class CotacaoDAO {
             ex.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO!");
+            alert.setHeaderText("");
             alert.setContentText("ERRO: Não foi possível concluir a operação.");
+            alert.show();
         }
     }
 
@@ -126,7 +136,9 @@ public class CotacaoDAO {
             ex.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO!");
+            alert.setHeaderText("");
             alert.setContentText("ERRO: Não foi possível concluir a operação.");
+            alert.show();
         }
         return cotacao;
     }
@@ -153,7 +165,9 @@ public class CotacaoDAO {
             ex.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO!");
+            alert.setHeaderText("");
             alert.setContentText("ERRO: Não foi possível concluir a operação.");
+            alert.show();
         }
 
         return cotacao;

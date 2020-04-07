@@ -3,7 +3,6 @@ package br.infnet.edu.jdbc;
 import br.infnet.edu.propriedades.LeitorDePropriedadesJDBC;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
@@ -27,13 +26,8 @@ public class ConnectionFactory {
 
         try{
             Class.forName(driver);
-            retorno = DriverManager.getConnection(url,
-                                                username,
-                                                password);
-            DatabaseMetaData databaseMetaData = retorno.getMetaData();
+            retorno = DriverManager.getConnection(url, username, password);
 
-            System.out.println("Banco de dados conectado: " + databaseMetaData.getDatabaseProductName());
-            System.out.println("Versão: " + databaseMetaData.getDatabaseProductVersion());
         } catch (SQLException | NullPointerException | ClassNotFoundException ex) {
             System.out.println("ERRO: Não foi possível conectar.");
         }
