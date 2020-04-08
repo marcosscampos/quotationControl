@@ -24,6 +24,7 @@ public class ProdutoDAO {
         } catch (Exception ex) {
             ex.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setHeaderText("");
             alert.setTitle("ERRO!");
             alert.setContentText("ERRO: Não foi possível concluir a operação.");
 
@@ -51,6 +52,7 @@ public class ProdutoDAO {
             ex.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO!");
+			alert.setHeaderText("");
             alert.setContentText("ERRO: Não foi possível concluir a operação.");
 
             alert.showAndWait();
@@ -79,6 +81,7 @@ public class ProdutoDAO {
             ex.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO!");
+			alert.setHeaderText("");
             alert.setContentText("ERRO: Não foi possível concluir a operação.");
 
             alert.showAndWait();
@@ -100,6 +103,7 @@ public class ProdutoDAO {
             ex.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO!");
+			alert.setHeaderText("");
             alert.setContentText("ERRO: Não foi possível concluir a operação.");
 
             alert.showAndWait();
@@ -121,6 +125,7 @@ public class ProdutoDAO {
             ex.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO!");
+			alert.setHeaderText("");
             alert.setContentText("ERRO: Não foi possível concluir a operação.");
 
             alert.showAndWait();
@@ -151,10 +156,10 @@ public class ProdutoDAO {
             ex.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO!");
+			alert.setHeaderText("");
             alert.setContentText("ERRO: Não foi possível concluir a operação.");
 
             alert.showAndWait();
-
         }
 
         return produto;
@@ -184,6 +189,7 @@ public class ProdutoDAO {
             ex.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO!");
+			alert.setHeaderText("");
             alert.setContentText("ERRO: Não foi possível concluir a operação.");
 
             alert.showAndWait();
