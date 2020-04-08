@@ -18,7 +18,6 @@ public class CotacaoDAO {
             String sql = "INSERT INTO cotacao(preco, data, id_produto) VALUES(?, ?, ?)";
 
             try(PreparedStatement statement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-                System.out.println(cotacao.getProduto().getId());
                 statement.setDouble(1, cotacao.getPreco());
                 statement.setDate(2, new Date(cotacao.getData().getTime()));
                 statement.setInt(3, cotacao.getProduto().getId());

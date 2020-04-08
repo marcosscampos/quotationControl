@@ -150,6 +150,7 @@ public class QuotationController implements Initializable {
                 alert.setTitle("Sucesso");
                 alert.setHeaderText("");
                 alert.setContentText("Produto cadastrado com sucesso!");
+                alert.show();
 
                 var carregaProduto = carregarTableViewProdutos();
                 tableProduto.setItems(carregaProduto);
@@ -381,7 +382,6 @@ public class QuotationController implements Initializable {
         var produto = produtodao.obterPor(produtoId);
         var date = Instant.from(dtCotacaoData.getValue().atStartOfDay(ZoneId.systemDefault()));
         var preco = txtpreco.getText();
-        System.out.println(produto.getId());
 
         cotacao.setProduto(produto);
         cotacao.setData(Date.from(date));
@@ -399,13 +399,6 @@ public class QuotationController implements Initializable {
 
             txtProduto.setText("");
             txtFornecedor.setText("");
-
-
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Sucesso");
-            alert.setHeaderText("");
-            alert.setContentText("Produto Cadastrado com sucesso!");
-            alert.show();
 
         } catch (Exception ex) {
             ex.printStackTrace();
