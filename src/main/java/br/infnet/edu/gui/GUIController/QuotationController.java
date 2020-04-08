@@ -12,6 +12,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.DirectoryChooser;
 import javafx.util.StringConverter;
 
 import java.io.BufferedWriter;
@@ -19,6 +22,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -68,7 +73,7 @@ public class QuotationController implements Initializable {
     private Button btnSalvarProduto;
 
     @FXML
-    private Button btnExcluir;
+    private Button btnExcluirProduto;
 
     @FXML
     private TextField txtProduto;
@@ -105,11 +110,12 @@ public class QuotationController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         //Data - DatePicker
         String pattern = "dd/MM/yyyy";
         dtCotacaoData.setShowWeekNumbers(true);
         dtCotacaoData.setPromptText(pattern.toLowerCase());
-        dtCotacaoData.setConverter(new StringConverter<LocalDate>() {
+        dtCotacaoData.setConverter(new StringConverter<>() {
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
 
             @Override
@@ -133,7 +139,6 @@ public class QuotationController implements Initializable {
 
         //Produtos
         definirColunasProduto();
-        editarProduto();
         var produtos = carregarTableViewProdutos();
         tableProduto.setItems(produtos);
 
@@ -146,6 +151,9 @@ public class QuotationController implements Initializable {
                 alert.setHeaderText("");
                 alert.setContentText("Produto cadastrado com sucesso!");
 
+                var carregaProduto = carregarTableViewProdutos();
+                tableProduto.setItems(carregaProduto);
+
             } catch (Exception ex) {
                 ex.printStackTrace();
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -155,9 +163,31 @@ public class QuotationController implements Initializable {
             }
         });
 
+        btnExcluirProduto.setOnAction(e -> {
+            try {
+                excluirProduto();
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Sucesso");
+                alert.setHeaderText("");
+                alert.setContentText("Produto excluído com sucesso!");
+                alert.show();
+
+                var carregaProduto = carregarTableViewProdutos();
+                tableProduto.setItems(carregaProduto);
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("ERRO!");
+                alert.setHeaderText("");
+                alert.setContentText("ERRO! Não foi possível excluir o produto.");
+                alert.show();
+            }
+        });
+
         //Cotações
         definirColunasCotacao();
-        editarCotacao();
         var cotacoes = carregarTableViewCotacao();
         var produto = FXCollections.observableArrayList(produtodao.listar());
         tableCotacao.setItems(cotacoes);
@@ -167,21 +197,48 @@ public class QuotationController implements Initializable {
         });
 
         btnExcluirCotacao.setOnAction(e -> {
-            SelectionModel selectionModel = tableCotacao.getSelectionModel();
-            var itemSelecionado = selectionModel.getSelectedItem();
-            cotacaodao.excluir((Cotacao) itemSelecionado);
+            try {
+                excluirCotacao();
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Sucesso");
+                alert.setHeaderText("");
+                alert.setContentText("Cotação excluída com sucesso!");
+                alert.show();
+
+                var carregarCotacao = carregarTableViewCotacao();
+                tableCotacao.setItems(carregarCotacao);
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("ERRO!");
+                alert.setHeaderText("");
+                alert.setContentText("ERRO! Não foi possível excluir a cotação.");
+                alert.show();
+            }
+
         });
 
         btnSalvarCotacao.setOnAction(e -> {
             try {
                 cadastrarCotacao();
 
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Sucesso");
+                alert.setHeaderText("");
+                alert.setContentText("Produto cadastrado com sucesso!");
+                alert.show();
+
+                var carregarCotacao = carregarTableViewCotacao();
+                tableCotacao.setItems(carregarCotacao);
             } catch (Exception ex) {
                 ex.printStackTrace();
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setHeaderText("");
                 alert.setTitle("ERRO!");
                 alert.setContentText("ERRO! Não foi possivel cadastrar uma cotação.");
+                alert.show();
             }
         });
         dropProduto.setItems(produto);
@@ -230,6 +287,21 @@ public class QuotationController implements Initializable {
         tableProdutoId.setCellValueFactory(param -> param.getValue().idProperty().asObject());
         tableProdutoNome.setCellValueFactory(param -> param.getValue().nomeProperty());
         tableProdutoFornecedor.setCellValueFactory(param -> param.getValue().fornecedorProperty());
+
+        tableProdutoNome.setCellFactory(TextFieldTableCell.forTableColumn());
+        tableProdutoFornecedor.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        tableProdutoNome.setOnEditCommit(e -> {
+            e.getTableView().getItems().get(e.getTablePosition().getRow()).setNome(e.getNewValue());
+            tableProdutoNome.setEditable(true);
+            editarProduto();
+        });
+
+        tableProdutoFornecedor.setOnEditCommit(e -> {
+            e.getTableView().getItems().get(e.getTablePosition().getRow()).setFornecedor(e.getNewValue());
+            tableProdutoFornecedor.setEditable(true);
+            editarProduto();
+        });
     }
 
     private void definirColunasCotacao() {
@@ -241,21 +313,19 @@ public class QuotationController implements Initializable {
     }
 
     private void editarProduto() {
-        tableProdutoNome.setCellFactory(TextFieldTableCell.forTableColumn());
-        tableProdutoFornecedor.setCellFactory(TextFieldTableCell.forTableColumn());
-        produtodao.listar();
-    }
+        var linhaSelecionada = tableProduto.getSelectionModel();
+        var selecionarItem = linhaSelecionada.getSelectedItem();
+        Produto produto = new Produto();
 
-    private void editarCotacao() {
-        tableCotacaoProduto.setCellFactory(TextFieldTableCell.forTableColumn());
-        tableCotacaoFornecedor.setCellFactory(TextFieldTableCell.forTableColumn());
-        tableCotacaoData.setCellFactory(TextFieldTableCell.forTableColumn());
-        cotacaodao.listar();
+        produto.setId(selecionarItem.getId());
+        produto.setNome(selecionarItem.getNome());
+        produto.setFornecedor(selecionarItem.getFornecedor());
+        produtodao.alterar(produto);
     }
 
     private void exportarExcel() {
         Writer writer;
-        String pasta = System.getProperty("user.home");
+        String pasta = System.getProperty("user.dir");
         String arquivo = "/Cotacao.csv";
 
         var cotacoes = cotacaodao.listar();
@@ -280,7 +350,7 @@ public class QuotationController implements Initializable {
             for (CotacaoDTO cotacao : result) {
                 String texto = "ID: " + cotacao.getId() + ";"
                         + "Produto: " + cotacao.getNome() + ";"
-                        + "Preço: " + cotacao.getPreco() + ";"
+                        + cotacao.getPreco() + ";"
                         + "Data Cotacao: " + cotacao.getData() + "\n";
 
                 writer.write(texto);
@@ -292,7 +362,7 @@ public class QuotationController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Sucesso");
             alert.setHeaderText("");
-            alert.setContentText("Exportado com sucesso!");
+            alert.setContentText("Exportado com sucesso! Salvo em: " + pasta);
             alert.show();
 
         } catch (Exception ex) {
@@ -307,10 +377,11 @@ public class QuotationController implements Initializable {
 
     private void cadastrarCotacao() {
         Cotacao cotacao = new Cotacao();
-        var produtoId = dropProduto.getSelectionModel().getSelectedIndex();
+        var produtoId = dropProduto.getSelectionModel().getSelectedItem().getId();
         var produto = produtodao.obterPor(produtoId);
         var date = Instant.from(dtCotacaoData.getValue().atStartOfDay(ZoneId.systemDefault()));
         var preco = txtpreco.getText();
+        System.out.println(produto.getId());
 
         cotacao.setProduto(produto);
         cotacao.setData(Date.from(date));
@@ -328,12 +399,40 @@ public class QuotationController implements Initializable {
 
             txtProduto.setText("");
             txtFornecedor.setText("");
+
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Sucesso");
+            alert.setHeaderText("");
+            alert.setContentText("Produto Cadastrado com sucesso!");
+            alert.show();
+
         } catch (Exception ex) {
             ex.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERRO!");
             alert.setHeaderText("");
             alert.setContentText("ERRO! Não foi possível cadastrar um produto.");
+            alert.show();
+        }
+
+
+    }
+
+    private void excluirProduto() {
+        var selectionModel = tableProduto.getSelectionModel();
+        var selectedItem = selectionModel.getSelectedItem();
+        if (selectedItem != null) {
+            produtodao.excluir(selectedItem.getId());
+        }
+    }
+
+    private void excluirCotacao() {
+        var modeloSelecionado = tableCotacao.getSelectionModel();
+        var itemSelecionado = modeloSelecionado.getSelectedItem();
+
+        if (itemSelecionado != null) {
+            cotacaodao.excluir(itemSelecionado.getId());
         }
     }
 
@@ -341,7 +440,7 @@ public class QuotationController implements Initializable {
 
         @Override
         public String toString(Produto produto) {
-            if(produto != null) {
+            if (produto != null) {
                 return produto.getNome();
             }
 
@@ -351,9 +450,10 @@ public class QuotationController implements Initializable {
         @Override
         public Produto fromString(String s) {
             return produtodao.listar().stream()
-                    .filter(p ->  p.getNome().equals(s))
+                    .filter(p -> p.getNome().equals(s))
                     .findFirst()
                     .orElse(null);
         }
     }
+
 }

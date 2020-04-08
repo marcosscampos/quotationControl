@@ -12,19 +12,19 @@ import java.util.List;
 
 public class CotacaoDAO {
 
-    public Cotacao inserir(Cotacao produto) {
+    public Cotacao inserir(Cotacao cotacao) {
 
         try (Connection con = ConnectionFactory.conectar()) {
             String sql = "INSERT INTO cotacao(preco, data, id_produto) VALUES(?, ?, ?)";
 
-            try(PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-                System.out.println(produto.getProduto().getId());
-                ps.setDouble(1, produto.getPreco());
-                ps.setDate(2, new Date(produto.getData().getTime()));
-                ps.setInt(3, produto.getProduto().getId());
-                ps.executeUpdate();
+            try(PreparedStatement statement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                System.out.println(cotacao.getProduto().getId());
+                statement.setDouble(1, cotacao.getPreco());
+                statement.setDate(2, new Date(cotacao.getData().getTime()));
+                statement.setInt(3, cotacao.getProduto().getId());
+                statement.executeUpdate();
 
-                ResultSet rs = ps.getGeneratedKeys();
+                ResultSet rs = statement.getGeneratedKeys();
                 if(rs != null && rs.next()) {
                     return obterPor(rs.getInt(1));
                 }
@@ -38,7 +38,7 @@ public class CotacaoDAO {
             alert.setContentText("ERRO: Não foi possível concluir a operação.");
             alert.show();
         }
-        return produto;
+        return cotacao;
     }
 
     public List<Cotacao> listar() {
@@ -99,12 +99,12 @@ public class CotacaoDAO {
         return cotacoes;
     }
 
-    public void excluir(Cotacao cotacao) {
+    public void excluir(int id) {
         try (Connection con = ConnectionFactory.conectar()) {
             String sql = "DELETE FROM cotacao where id = ?";
 
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, cotacao.getId());
+            ps.setInt(1, id);
             ps.executeUpdate();
             ps.close();
 

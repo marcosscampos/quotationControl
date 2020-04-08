@@ -87,12 +87,12 @@ public class ProdutoDAO {
         return retorno;
     }
 
-    public void excluir(Produto produto) {
+    public void excluir(int id) {
         try (Connection con = ConnectionFactory.conectar()) {
             String sql = "DELETE FROM produto WHERE id = ?";
 
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, produto.getId());
+            ps.setInt(1, id);
             ps.executeUpdate();
             ps.close();
 
@@ -132,7 +132,7 @@ public class ProdutoDAO {
         Produto produto = new Produto();
 
         try (Connection con = ConnectionFactory.conectar()) {
-            String sql = "SELECT nome, fornecedor FROM produto WHERE id = ?";
+            String sql = "SELECT id, nome, fornecedor FROM produto WHERE id = ?";
 
             PreparedStatement ps = con.prepareStatement(sql);
 
@@ -140,6 +140,7 @@ public class ProdutoDAO {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
+                produto.setId(rs.getInt("id"));
                 produto.setNome(rs.getString("nome"));
                 produto.setFornecedor(rs.getString("fornecedor"));
                 produtos.add(produto);
