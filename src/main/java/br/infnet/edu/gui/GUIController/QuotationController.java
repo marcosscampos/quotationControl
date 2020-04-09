@@ -37,8 +37,6 @@ public class QuotationController implements Initializable {
     ProdutoDAO produtodao = new ProdutoDAO();
     CotacaoDAO cotacaodao = new CotacaoDAO();
 
-    private List<Produto> listaProduto = new ArrayList<>();
-
     @FXML
     private TableView<ProdutoDTO> tableProduto;
 
@@ -92,15 +90,6 @@ public class QuotationController implements Initializable {
 
     @FXML
     private Button btnExcluirCotacao;
-
-    @FXML
-    private ComboBox<Produto> comboFiltro;
-
-    @FXML
-    private Button btnPesquisar;
-
-    @FXML
-    private ComboBox<Cotacao> dropfiltro;
 
     @FXML
     private ComboBox<Produto> dropProduto;
@@ -228,7 +217,7 @@ public class QuotationController implements Initializable {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Sucesso");
                 alert.setHeaderText("");
-                alert.setContentText("Produto cadastrado com sucesso!");
+                alert.setContentText("Cotação cadastrada com sucesso!");
                 alert.show();
 
                 var carregarCotacao = carregarTableViewCotacao();
@@ -387,6 +376,8 @@ public class QuotationController implements Initializable {
         cotacao.setData(Date.from(date));
         cotacao.setPreco(Double.parseDouble(preco));
         cotacaodao.inserir(cotacao);
+
+        txtpreco.setText("");
     }
 
     private void cadastrarProduto() {

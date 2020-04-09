@@ -1,12 +1,11 @@
 package br.infnet.edu.propriedades;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 public class LeitorDePropriedadesJDBC {
-    private Properties props;
+    private final Properties props;
 
    public LeitorDePropriedadesJDBC(String arquivo) {
        props = new Properties();
